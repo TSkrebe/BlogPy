@@ -6,10 +6,10 @@ from wtforms import StringField, validators, PasswordField, SubmitField, Boolean
 
 
 class LoginForm(Form):
-    username = StringField('Username', validators=[validators.DataRequired()])
-    password = PasswordField('Password', validators=[validators.DataRequired()])
+    username = StringField("Username", validators=[validators.DataRequired()])
+    password = PasswordField("Password", validators=[validators.DataRequired()])
     remember_me = BooleanField("Remember me", default=False)
-    submit = SubmitField('Submit')
+    submit = SubmitField("Submit")
 
     def validate_on_submit(self):
         if not super(LoginForm, self).validate_on_submit():

@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename, redirect
     This bluprint is for routes that can be accessed only by the owner
 """
 
-auth = Blueprint('auth', __name__, url_prefix='/auth')
+auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 @auth.before_request
@@ -20,10 +20,10 @@ def before():
     pass
 
 
-@auth.route('/logout')
+@auth.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('main.index'))
+    return redirect(url_for("main.index"))
 
 
 @auth.route("/upload_pic", methods=["POST"])
@@ -32,7 +32,7 @@ def upload_pic():
     if form.validate_on_submit():
         filename = secure_filename(form.picture.data.filename)
         form.picture.data.save(os.path.join(current_app.config["UPLOAD_DIRECTORY"], filename))
-    return redirect(url_for('auth.panel'))
+    return redirect(url_for("auth.panel"))
 
 
 @auth.route("/merge_post/<integer:post_id>", methods=["POST"])
@@ -41,7 +41,7 @@ def update_add_post(post_id):
     if post is not None and post.author != current_user:
         abort(403)
     if post_id < -1:
-        return redirect(url_for('auth.panel'))
+        return redirect(url_for("auth.panel"))
 
     post_form = PostForm()
     if post_form.validate_on_submit():
@@ -58,17 +58,17 @@ def update_add_post(post_id):
                         body_text=post_form.body_text.data,
                         draft=post_form.draft.data)
             db.session.merge(post)
-    return redirect(url_for('auth.panel', post_id=post_id))
+    return redirect(url_for("auth.panel", post_id=post_id))
 
 
-@auth.route("/panel/", defaults={'post_id': -1})
+@auth.route("/panel/", defaults={"post_id": -1})
 @auth.route("/panel/<integer:post_id>")
 def panel(post_id):
     post = Post.query.get(post_id)
     if post is not None and post.author != current_user:
         abort(403)
     if post_id < -1:
-        return redirect(url_for('auth.panel'))
+        return redirect(url_for("auth.panel"))
     post_form = PostForm()
     if post is not None:
         post_form.title.data = post.title
@@ -76,7 +76,7 @@ def panel(post_id):
         post_form.draft.data = post.draft
     posts = Post.query.all()
     picture_names = os.listdir(current_app.config["UPLOAD_DIRECTORY"])
-    return render_template('auth/panel.html', post_form=post_form,
+    return render_template("auth/panel.html", post_form=post_form,
                            picture_form=PictureForm(), posts=posts,
                            picture_names=picture_names, post_id=post_id)
 
@@ -90,6 +90,6 @@ def delete_comment(comment_id):
 @auth.route("/post/delete/<int:post_id>", methods=["POST"])
 def delete_post(post_id):
     Post.query.filter_by(id=post_id).delete()
-    return redirect(request.args.get('next', '') or
+    return redirect(request.args.get("next", "") or
                     request.referrer or
-                    url_for('main.index'))
+                    url_for("main.index"))
