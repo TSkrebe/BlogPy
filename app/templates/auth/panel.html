@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-2">
+                {{ wtf.quick_form(picture_form, action=url_for('auth.upload_pic')) }}
+                {% for picture_name in picture_names %}
+                    <img class="img-thumbnail" src="{{ url_for('main.image', filename=picture_name) }}">
+                {% endfor %}
+
+            </div>
+            <div class="col-xs-6">
+
+                {{ wtf.quick_form(post_form, action=url_for('auth.update_add_post', post_id=post_id)) }}
+
+            </div>
+            <div class="col-xs-4">
+                <a class="btn btn-info" role="button" href="{{ url_for('auth.panel') }}">New Post</a>
+                <br/> <br/>
+                <ul class="list-group">
+                    {% for post in posts %}
+                        {% if post.draft %}
+                        <li class="list-group-item list-group-item-info">
+                            <a href="{{ url_for('main.post', slug=post.slug) }}"><strong>{{ post.title }}</strong></a>
+                            <a href="{{ url_for('auth.panel', post_id=post.id) }}">Edit</a>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('main.post', slug=post.slug) }}"><strong>{{ post.title }}</strong></a>
+                            <a href="{{ url_for('auth.panel', post_id=post.id) }}">Edit</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    {% block scripts %}
+        {{ super() }}
+        {{ pagedown.include_pagedown() }}
+
+    {% endblock %}
+
+{% endblock %}

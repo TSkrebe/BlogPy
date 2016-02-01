@@ -1,0 +1,94 @@
+{% extends 'main/base.html' %}
+{% import 'main/macros.html' as macros %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block custom_content %}
+
+    <ul class="list-group">
+        {{ macros.render_post(post, current_user, date_format) }}
+    </ul>
+
+    <!-- comment section -->
+
+    {% if comments %}
+        <h3 id="comments"><strong>Comment section</strong></h3>
+        <ul class="list-group">
+            {% for comment in comments %}
+                {% if loop.index is not divisibleby 2 %}
+                    {% set com_color="#EEEEEE" %}
+                {% else %}
+                    {% set com_color="white" %}
+                {% endif %}
+                <li class="list-group-item clearfix" style="border: 0; padding-bottom: 20px; padding-top: 15px; background-color: {{ com_color }};'">
+                    <!-- if commented by registered user (admin) -->
+                    {% if comment.special %}
+                        {% set _color="red" %}
+                    {% else %}
+                        {% set _color="" %}
+                    {% endif %}
+
+                    <h4 style="color: {{ _color }}; display: inline">
+                        <strong> {{ comment.name }}</strong>
+                    </h4>
+                    <label > &nbsp;&nbsp;&nbsp;&nbsp; {{ moment(comment.timestamp).fromNow() }}
+                    </label>
+
+                    <p>{{ comment.body_text }}</p>
+
+                    {% if current_user.is_authenticated %}
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#myModal-{{ comment.id }}">
+                          Delete
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal-{{ comment.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Do you really want do delete?</h4>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" id="{{ comment.id }}"  class="btn btn-danger delete-comment" data-dismiss="modal">DELETE</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                    {% endif %}
+
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h3 id="write"><strong>Write a comment</strong></h3>
+
+    {{ wtf.quick_form(comment_form) }}
+
+{% endblock %}
+
+{% block scripts %}
+
+
+
+    {{ super() }}
+    <!-- no need to show this script to regular users -->
+    {% if current_user.is_authenticated %}
+    <script type="text/javascript">
+        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        $(".delete-comment").click(function(){
+            var delete_id = $(this).attr('id');
+            $.post($SCRIPT_ROOT + "/auth/comment/delete/" + delete_id,
+                    function (data) {
+                        if (data['result'] == 1){
+                            $("#" + delete_id).closest('li').fadeOut()
+                        }
+                    })
+        });
+    </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,4 @@
+{% import 'main/macros.html' as macros %}
+{% for item in items %}
+    {{ macros.render_post(item, current_user, date_format) }}
+{% endfor %}
