@@ -22,6 +22,7 @@ def create_app(config):
     app = Flask(__name__)
     app.config.from_object(configs[config])
     db.init_app(app)
+
     moment.init_app(app)
     Markdown(app)
     bootstrap.init_app(app)
