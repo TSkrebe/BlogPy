@@ -10,7 +10,8 @@ class Config:
     RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY") or "recaptcha_private_key"
     INITIAL_PAGE_LOAD = 4
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-
+    RECAPTCHA_PARAMETERS = {'hl': 'zh', 'render': 'explicit'}
+    RECAPTCHA_DATA_ATTRS = {'theme': 'dark'}
     @staticmethod
     def init_app(app):
         pass
