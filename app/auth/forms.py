@@ -4,6 +4,7 @@ from flask.ext.wtf.file import FileField, FileRequired, FileAllowed
 
 from wtforms import SubmitField, BooleanField, StringField, validators
 
+allowed_image_formats = ("png", "jpg", "gif", "jpeg")
 
 class PostForm(Form):
     title = StringField("Title", validators=[validators.Length(max=256), validators.data_required()])
@@ -13,5 +14,5 @@ class PostForm(Form):
 
 
 class PictureForm(Form):
-    picture = FileField("File", validators=[FileRequired(), FileAllowed(["png", "jpg", "gif", "jpeg"])])
+    picture = FileField("File", validators=[FileRequired(), FileAllowed(allowed_image_formats)])
     submit = SubmitField("Upload")

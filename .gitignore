@@ -1,4 +1,7 @@
 venv
 test.sqlite
-/uploads/*
 .idea
+uploads/*.png
+uploads/*.gif
+uploads/*.jpg
+uploads/*.jpeg
