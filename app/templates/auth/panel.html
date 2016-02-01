@@ -22,15 +22,15 @@
                 <ul class="list-group">
                     {% for post in posts %}
                         {% if post.draft %}
-                        <li class="list-group-item list-group-item-info">
-                            <a href="{{ url_for('main.post', slug=post.slug) }}"><strong>{{ post.title }}</strong></a>
-                            <a href="{{ url_for('auth.panel', post_id=post.id) }}">Edit</a>
-                        </li>
+                            <li class="list-group-item list-group-item-info">
+                                <a href="{{ url_for('main.post', slug=post.slug) }}"><strong>{{ post.title }}</strong></a>
+                                <a href="{{ url_for('auth.panel', post_id=post.id) }}">Edit</a>
+                            </li>
                         {% else %}
-                        <li class="list-group-item">
-                            <a href="{{ url_for('main.post', slug=post.slug) }}"><strong>{{ post.title }}</strong></a>
-                            <a href="{{ url_for('auth.panel', post_id=post.id) }}">Edit</a>
-                        </li>
+                            <li class="list-group-item">
+                                <a href="{{ url_for('main.post', slug=post.slug) }}"><strong>{{ post.title }}</strong></a>
+                                <a href="{{ url_for('auth.panel', post_id=post.id) }}">Edit</a>
+                            </li>
                         {% endif %}
                     {% endfor %}
                 </ul>

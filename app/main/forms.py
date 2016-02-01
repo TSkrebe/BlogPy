@@ -1,9 +1,7 @@
 
 from app.models import User
 from flask.ext.login import login_user
-from flask.ext.pagedown.fields import PageDownField
-from flask.ext.wtf import Form, RecaptchaField
-from flask.ext.wtf.file import FileField, FileRequired, FileAllowed
+from flask.ext.wtf import Form
 from wtforms import StringField, validators, PasswordField, SubmitField, BooleanField, TextAreaField
 
 
@@ -31,6 +29,5 @@ class LoginForm(Form):
 class CommentForm(Form):
     name = StringField("Name", validators=[validators.data_required()])
     body_text = TextAreaField("Comment", validators=[validators.data_required()])
-    recaptcha = RecaptchaField()
     submit = SubmitField("Submit")
 

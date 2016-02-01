@@ -1,40 +1,40 @@
 <!-- This is used by main page and load more button-->
 {% macro render_post(item, current_user, date_format) %}
-        <li class="post list-group-item clearfix" style="border: 0px">
+    <li class="post list-group-item clearfix" style="border: 0px">
 
-            <div class="page-header">
-                <a href="{{ url_for('main.post', slug=item.slug) }}">
-                    <h1>
-                        {{ item.title }}
-                    </h1>
-                </a>
+        <div class="page-header">
+            <a href="{{ url_for('main.post', slug=item.slug) }}">
+                <h1>
+                    {{ item.title }}
+                </h1>
+            </a>
 
+        </div>
+        <div class="row" style="margin-bottom: 20px">
+            <div class="col-xs-6">
+                <h5><strong>{{ date_format(item.created) }}</strong></h5>
             </div>
-            <div class="row" style="margin-bottom: 20px">
-                <div class="col-xs-6">
-                    <h5><strong>{{ date_format(item.created) }}</strong></h5>
-                </div>
-                <div class="col-xs-6 text-right">
-                    <a href="{{ url_for('main.post', slug=item.slug, _anchor='comments')}}">
+            <div class="col-xs-6 text-right">
+                <a href="{{ url_for('main.post', slug=item.slug, _anchor='comments') }}">
                     <h5>
-                    <strong>
-                        {% if item.comments.count() == 1 %}
-                            {{ item.comments.count() }} comment
-                        {% else %}
-                            {{ item.comments.count() }} comments
-                        {% endif %}
-                    </strong>
+                        <strong>
+                            {% if item.comments.count() == 1 %}
+                                {{ item.comments.count() }} comment
+                            {% else %}
+                                {{ item.comments.count() }} comments
+                            {% endif %}
+                        </strong>
                     </h5>
-                    </a>
-                </div>
+                </a>
             </div>
+        </div>
 
-            <p>
-                {{ item.body_text | markdown }}
-            </p>
+        <p>
+            {{ item.body_text | markdown }}
+        </p>
 
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('auth.panel', post_id=item.id) }}" class="btn btn-info pull-right">Edit</a>
-                {% endif %}
-        </li>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('auth.panel', post_id=item.id) }}" class="btn btn-info pull-right">Edit</a>
+        {% endif %}
+    </li>
 {% endmacro %}

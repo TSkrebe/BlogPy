@@ -6,16 +6,16 @@
     </br>
     {% if posts %}
         <h4>These are posts that have what you want:</h4>
-        {% else %}
+    {% else %}
         <h4>Sorry, we could not find anything...</h4>
     {% endif %}
 
 
 
     <ul class="list-group ">
-        {% for post in posts  %}
+        {% for post in posts %}
             <li class="list-group-item">
-            <a href="{{ url_for('main.post', slug=post.slug) }}">{{ post.title }}</a>
+                <a href="{{ url_for('main.post', slug=post.slug) }}">{{ post.title }}</a>
             </li>
         {% endfor %}
     </ul>

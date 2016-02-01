@@ -19,6 +19,9 @@ def index():
 def about():
     return render_template("main/about.html")
 
+@main.route("/projects")
+def projects():
+    return render_template("main/projects.html")
 
 @main.route("/load_more_posts")
 def load_more_posts():

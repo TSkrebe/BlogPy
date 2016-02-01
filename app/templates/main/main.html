@@ -5,7 +5,7 @@
 
     <ul id="posts" class="list-group">
         {% for item in items %}
-                {{ macros.render_post(item, current_user, date_format) }}
+            {{ macros.render_post(item, current_user, date_format) }}
         {% endfor %}
     </ul>
     <button type="button" class="btn btn-danger btn-lg col-xs-12" id="btn-load-more">Load more</button>
