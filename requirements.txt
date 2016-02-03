@@ -3,7 +3,6 @@ dominate==2.1.16
 Flask==0.10.1
 Flask-Bootstrap==3.3.5.7
 Flask-Login==0.3.2
-Flask-Markdown==0.3
 Flask-Migrate==1.7.0
 Flask-Moment==0.5.1
 Flask-PageDown==0.2.1
@@ -19,6 +18,7 @@ Mako==1.0.3
 Markdown==2.6.5
 MarkupSafe==0.23
 ply==3.8
+Pygments==2.1
 python-editor==0.5
 python-slugify==1.2.0
 setproctitle==1.1.8

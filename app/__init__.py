@@ -4,7 +4,6 @@ from app.main.converters import IntegerConverter
 from config import configs
 from flask import Flask
 from flask.ext.login import LoginManager
-from flask.ext.markdown import Markdown
 from flask.ext.moment import Moment
 from flask.ext.pagedown import PageDown
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -24,7 +23,6 @@ def create_app(config):
     db.init_app(app)
 
     moment.init_app(app)
-    Markdown(app)
     bootstrap.init_app(app)
     pagedown.init_app(app)
     login_manager.init_app(app)

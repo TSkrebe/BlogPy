@@ -30,7 +30,7 @@
         </div>
 
         <p>
-            {{ item.body_text | markdown }}
+            {{ item.body_text | markdown | safe }}
         </p>
 
         {% if current_user.is_authenticated %}

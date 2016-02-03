@@ -3,7 +3,9 @@ from app.models import Post, Comment
 from flask import Blueprint, render_template, request, url_for, redirect, session, \
     send_from_directory, current_app
 from flask.ext.login import current_user
-
+from pygments import highlight
+from pygments.formatters.html import HtmlFormatter
+from pygments.lexers.python import PythonLexer
 
 main = Blueprint("main", __name__)
 
@@ -37,7 +39,7 @@ def load_more_posts():
 def search():
     text = request.args.get("text", "")
     if not text:
-        next = request.referrer or url_for("main.index")
+        next = redirect(request.referrer or url_for("main.index"))
         return next
     posts = Post.query.filter_by(draft=False).filter(Post.body_text.like("%{}%".format(text))).all()
     return render_template("main/search.html", posts=posts, query=text)
@@ -77,6 +79,7 @@ def login():
 
 def date_format(date):
     return date.strftime("%d %B %Y")
+
 
 
 @main.app_errorhandler(404)
