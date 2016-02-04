@@ -6,6 +6,7 @@ from wtforms import SubmitField, BooleanField, StringField, validators
 
 allowed_image_formats = ("png", "jpg", "gif", "jpeg")
 
+
 class PostForm(Form):
     title = StringField("Title", validators=[validators.Length(max=256), validators.data_required()])
     body_text = PageDownField("Your post", validators=[validators.data_required()])

@@ -3,7 +3,7 @@ import os
 from app import db
 from app.auth.forms import PictureForm, PostForm, allowed_image_formats
 from app.models import Post, Comment
-from flask import Blueprint, url_for, abort, render_template, request, jsonify, current_app
+from flask import Blueprint, url_for, abort, render_template, request, jsonify, current_app, flash
 from flask.ext.login import login_required, logout_user, current_user
 from werkzeug.utils import secure_filename, redirect
 
@@ -27,7 +27,7 @@ def logout():
 
 
 @auth.route("/upload_pic", methods=["POST"])
-def upload_pic():
+def upload_image():
     form = PictureForm()
     if form.validate_on_submit():
         filename = secure_filename(form.picture.data.filename)
@@ -35,50 +35,63 @@ def upload_pic():
     return redirect(url_for("auth.panel"))
 
 
-@auth.route("/merge_post/<integer:post_id>", methods=["POST"])
-def update_add_post(post_id):
-    post = Post.query.get(post_id)
-    if post is not None and post.author != current_user:
-        abort(403)
-    if post_id < -1:
-        return redirect(url_for("auth.panel"))
+@auth.route("/create/post", methods=["POST"])
+def create_post():
+
+    # tries to add a post to the model
 
     post_form = PostForm()
     if post_form.validate_on_submit():
-        if post is None:
-            new_post = Post(title=post_form.title.data,
+        db.session.add(Post(title=post_form.title.data,
                             body_text=post_form.body_text.data,
-                            draft=post_form.draft.data,
-                            author=current_user._get_current_object())
-            db.session.add(new_post)
-            db.session.commit()
-            post_id = new_post.id
-        else:
-            post.update(title=post_form.title.data,
-                        body_text=post_form.body_text.data,
-                        draft=post_form.draft.data)
-            db.session.merge(post)
-    return redirect(url_for("auth.panel", post_id=post_id))
+                            draft=post_form.draft.data))
+        flash("Successfuly created post")
+        return redirect(url_for('auth.panel'))
+    flash("ooop! we could not create this post... :(")
+    return redirect(url_for('auth.panel'))
 
 
-@auth.route("/panel/", defaults={"post_id": -1})
-@auth.route("/panel/<integer:post_id>")
-def panel(post_id):
-    post = Post.query.get(post_id)
-    if post is not None and post.author != current_user:
-        abort(403)
-    if post_id < -1:
-        return redirect(url_for("auth.panel"))
+@auth.route("/update/post/<int:post_id>", methods=["POST"])
+def update_post(post_id):
+
+    # tries to update the model
+
+    post = Post.query.get_or_404(post_id)
     post_form = PostForm()
-    if post is not None:
-        post_form.title.data = post.title
-        post_form.body_text.data = post.body_text
-        post_form.draft.data = post.draft
+    if post_form.validate_on_submit():
+        post.update(title=post_form.title.data,
+                    body_text=post_form.body_text.data,
+                    draft=post_form.draft.data)
+        return redirect(url_for('auth.edit_post', post_id=post_id))
+    return redirect(url_for('auth.edit_post', post_id=post_id))
+
+
+@auth.route("/panel")
+def panel():
+
+    # renders a view for adding new post
+
     posts = Post.query.all()
-    picture_names = get_image_list()
-    return render_template("auth/panel.html", post_form=post_form,
+    return render_template("auth/base.html", post_form=PostForm(),
                            picture_form=PictureForm(), posts=posts,
-                           picture_names=picture_names, post_id=post_id)
+                           picture_names=get_image_list())
+
+
+@auth.route("/edit/post/<int:post_id>", methods=["POST", "GET"])
+def edit_post(post_id):
+
+    # renders a view for updating the post
+
+    post = Post.query.get_or_404(post_id)
+
+    post_form = PostForm()
+    post_form.title.data = post.title
+    post_form.body_text.data = post.body_text
+    post_form.draft.data = post.draft
+    posts = Post.query.all()
+    return render_template("/auth/edit_post.html", post_form=post_form,
+                           picture_form=PictureForm(), picture_names=get_image_list(),
+                           posts=posts, post_id=post_id)
 
 
 def get_image_list():

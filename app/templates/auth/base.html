@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-2">
+                {{ wtf.quick_form(picture_form, action=url_for('auth.upload_image')) }}
+                {% for picture_name in picture_names %}
+                    <img class="img-thumbnail" src="{{ url_for('main.image', filename=picture_name) }}">
+                {% endfor %}
+
+            </div>
+            <div class="col-xs-6">
+                {% block custom_content %}
+                    {{ wtf.quick_form(post_form, action=url_for('auth.create_post')) }}
+                {% endblock %}
+            </div>
+            <div class="col-xs-4">
+                <ul class="list-group">
+                    {% for post in posts %}
+                        {% if post.draft %}
+                            <li class="list-group-item list-group-item-info">
+                                <a href="{{ url_for('main.post', slug=post.slug) }}">
+                                    <strong>{{ post.title }}</strong>
+                                </a>
+                                <a href="{{ url_for('auth.edit_post', post_id=post.id) }}">Edit</a>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item">
+                                <a href="{{ url_for('main.post', slug=post.slug) }}">
+                                    <strong>{{ post.title }}</strong>
+                                </a>
+                                <a href="{{ url_for('auth.edit_post', post_id=post.id) }}">Edit</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    {% block scripts %}
+        {{ super() }}
+        {{ pagedown.include_pagedown() }}
+
+    {% endblock %}
+
+{% endblock %}

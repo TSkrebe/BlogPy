@@ -3,9 +3,6 @@ from app.models import Post, Comment
 from flask import Blueprint, render_template, request, url_for, redirect, session, \
     send_from_directory, current_app
 from flask.ext.login import current_user
-from pygments import highlight
-from pygments.formatters.html import HtmlFormatter
-from pygments.lexers.python import PythonLexer
 
 main = Blueprint("main", __name__)
 
