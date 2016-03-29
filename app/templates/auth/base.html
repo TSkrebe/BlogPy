@@ -12,11 +12,27 @@
 
             </div>
             <div class="col-xs-6">
+
                 {% block custom_content %}
-                    {{ wtf.quick_form(post_form, action=url_for('auth.create_post')) }}
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul class=flashes>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+                    {%  if updates %}
+                        <a class="btn btn-danger pull-right" style="margin-bottom: 10px" id="{{}}">DELETE</a>
+                    {% endif %}
+                    {{ wtf.quick_form(post_form) }}
+
                 {% endblock %}
             </div>
             <div class="col-xs-4">
+                <label class="label-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label>-drafted</label>
                 <ul class="list-group">
                     {% for post in posts %}
                         {% if post.draft %}
@@ -24,14 +40,14 @@
                                 <a href="{{ url_for('main.post', slug=post.slug) }}">
                                     <strong>{{ post.title }}</strong>
                                 </a>
-                                <a href="{{ url_for('auth.edit_post', post_id=post.id) }}">Edit</a>
+                                <a href="{{ url_for('auth.update_post', post_id=post.id) }}">Edit</a>
                             </li>
                         {% else %}
                             <li class="list-group-item">
                                 <a href="{{ url_for('main.post', slug=post.slug) }}">
                                     <strong>{{ post.title }}</strong>
                                 </a>
-                                <a href="{{ url_for('auth.edit_post', post_id=post.id) }}">Edit</a>
+                                <a href="{{ url_for('auth.update_post', post_id=post.id) }}">Edit</a>
                             </li>
                         {% endif %}
                     {% endfor %}

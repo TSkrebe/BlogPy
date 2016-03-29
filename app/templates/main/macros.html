@@ -34,7 +34,9 @@
         </p>
 
         {% if current_user.is_authenticated %}
-            <a href="{{ url_for('auth.panel', post_id=item.id) }}" class="btn btn-info pull-right">Edit</a>
+            <div class="btn-group pull-right">
+                <a href="{{ url_for('auth.update_post', post_id=item.id) }}" class="btn btn-info pull-right">Edit</a>
+            </div>
         {% endif %}
     </li>
 {% endmacro %}

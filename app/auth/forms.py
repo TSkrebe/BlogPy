@@ -2,12 +2,13 @@ from flask.ext.pagedown.fields import PageDownField
 from flask.ext.wtf import Form
 from flask.ext.wtf.file import FileField, FileRequired, FileAllowed
 
-from wtforms import SubmitField, BooleanField, StringField, validators
+from wtforms import SubmitField, BooleanField, StringField, validators, HiddenField
 
 allowed_image_formats = ("png", "jpg", "gif", "jpeg")
 
 
 class PostForm(Form):
+    id = HiddenField("Id")
     title = StringField("Title", validators=[validators.Length(max=256), validators.data_required()])
     body_text = PageDownField("Your post", validators=[validators.data_required()])
     draft = BooleanField("Draft", default=False)
