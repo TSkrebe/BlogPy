@@ -23,8 +23,9 @@
                             </ul>
                         {% endif %}
                     {% endwith %}
-                    {%  if updates %}
-                        <a class="btn btn-danger pull-right" style="margin-bottom: 10px" id="{{}}">DELETE</a>
+
+                    {% if updates %}
+                        <a class="btn btn-danger pull-right delete-post" style="margin-bottom: 10px" id="{{post_form.id.data}}">DELETE</a>
                     {% endif %}
                     {{ wtf.quick_form(post_form) }}
 
@@ -61,6 +62,19 @@
         {{ super() }}
         {{ pagedown.include_pagedown() }}
 
+    <script type="text/javascript">
+        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+            $(".delete-post").click(function() {
+                var id = $(this).attr('id');
+                $.post($SCRIPT_ROOT + "/auth/post/delete/" + id,
+                        function (data) {
+                            if (data['result'] == 1) {
+                                window.location.href = "/"
+                            }
+                        })
+            })
+
+        </script>
     {% endblock %}
 
 {% endblock %}
